@@ -12,7 +12,6 @@ Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv
 
 ## TODOs:
 - Refactor main loop (more) (currently ugly)
-- Add options for volume control
 - Add post-decision options to optionally play again (defaults to not playing again), with the same or some other bitrate (defaults to the same bitrate) unless a pre-existing mp3 was provided
 - Add score-keeping using an auto-generated/auto-updated .csv file:
     - By default, generate or update file flaco.csv in the current working directory
@@ -29,3 +28,4 @@ Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv
         - Total number of attempts
         - Median number of swaps
         - Median total time elapsed
+        - Estimation of the degree to which the results are explained by pure randomness

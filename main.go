@@ -27,8 +27,8 @@ func mainLoop(flac, mp3 string, bitrate int, timestamp string, volume int) *Resu
 	scanner := bufio.NewScanner(os.Stdin)
 	audioProcess := PlayOneOf(flac, mp3, timestamp, volume, playFlac)
 	for {
-		fmt.Printf("PLAYING TRACK %d (started at %s)\n", (numSwaps)%2+1, timestamp)
-		fmt.Print("What will you do? (s/t/d) ")
+		fmt.Printf("PLAYING TRACK %d (started at %s on %d%% volume)\n", (numSwaps)%2+1, timestamp, volume)
+		fmt.Print("What will you do? (s/t/+/-/d) ")
 		if scanner.Scan() {
 			fmt.Print("\n")
 			input := scanner.Text()
@@ -74,6 +74,14 @@ func mainLoop(flac, mp3 string, bitrate int, timestamp string, volume int) *Resu
 						}
 					}
 				}
+			case "+":
+				StopAudio(audioProcess)
+				volume = Clamp(volume+5, 0, 100)
+				audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac)
+			case "-":
+				StopAudio(audioProcess)
+				volume = Clamp(volume-5, 0, 100)
+				audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac)
 			}
 		}
 	}
@@ -93,7 +101,7 @@ func main() {
 		defer RemoveFile(mp3)
 	}
 
-	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Make your decision! (d)\n\n")
+	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
 
 	mainLoop(flags.flac, mp3, bitrate, "00:00", 65)
 }
