@@ -7,6 +7,7 @@ import (
 	"math/rand/v2"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"slices"
 )
 
@@ -55,9 +56,9 @@ func createMP3path(directory, fileName string) string {
 	var path string
 	for {
 		if i == 0 {
-			path = fmt.Sprintf("%s/%s.mp3", directory, fileName)
+			path = filepath.Join(directory, fmt.Sprintf("%s.mp3", fileName))
 		} else {
-			path = fmt.Sprintf("%s/%s_%d.mp3", directory, fileName, i)
+			path = filepath.Join(directory, fmt.Sprintf("%s_%d.mp3", fileName, i))
 		}
 		if _, err := os.Stat(path); err != nil {
 			return path
@@ -67,7 +68,7 @@ func createMP3path(directory, fileName string) string {
 }
 
 func createMP3(flags *flags, fileName string) string {
-	path := createMP3path(".", fileName)
+	path := createMP3path(os.TempDir(), fileName)
 	cmd := exec.Command("ffmpeg", "-i", flags.flac, "-ab", fmt.Sprintf("%dk", flags.bitrate), path)
 	_, err := cmd.Output()
 	if err != nil {
@@ -110,6 +111,7 @@ func main() {
 
 	fmt.Print("Converting FLAC to MP3...\n\n")
 	mp3 := createMP3(flags, "temp")
+	defer removeFile(mp3)
 
 	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Make your decision! (d)\n\n")
 	i := rand.IntN(2)
@@ -140,7 +142,6 @@ func main() {
 				audio = playAudio(audioFilePaths[i%2], timestamp, volume)
 			case "d":
 				stopAudio(audio)
-				removeFile(mp3)
 				for {
 					fmt.Print("Which of the two was the FLAC file? (1/2) ")
 					if scanner.Scan() {

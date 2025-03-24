@@ -2,18 +2,18 @@
 *Can **you** hear the difference?* (please read using the ["Gatorade. Is it in you?"](https://www.youtube.com/watch?v=E4B8owXm0Co) cadence)
 
 ## Why?
-Because I wanted to know if I can reliably tell the difference between 4.1kHz FLAC and mp3 at bitrates upwards of 128kbps.
+Because I wanted to know if I can reliably tell the difference between 4.1kHz FLAC and MP3 at bitrates upwards of 128kbps.
 
 ## What?
-This is an interactive CLI program that tests the user's (and the user's setup) ability to discern high-fidelity uncompressed audio from standard audio. It takes a FLAC file as a parameter and allows the user to alternate between playing the original FLAC and a compressed mp3 version of it, without revealing which is which. When the user is ready, the program will ask and finally reveal which of the two was the FLAC file.
+This is an interactive CLI program that tests the user's (and the user's setup) ability to discern high-fidelity uncompressed audio from standard audio. It takes a FLAC file as a parameter and allows the user to alternate between playing the original FLAC and a compressed MP3 version of it, without revealing which is which. When the user is ready, the program will ask and finally reveal which of the two was the FLAC file.
 
 ## How?
-Compile and run the program. Requires `ffmpeg` (to convert FLAC to mp3) and `mpv` (to play audio). I included an example FLAC in the assets folder. It also happens to be the goated opening track of the goat's magnum opus.
+Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv` (to play audio). I included an example FLAC in the assets folder. It also happens to be the goated opening track of the goat's magnum opus.
 
 ## TODOs:
 - Refactor (currently ugly)
 - Add options for volume control
-- Add an optional flag that allows passing a pre-existing mp3 file. If provided, do not convert the flac to mp3 nor delete the mp3 after execution
+- Add an optional flag that allows passing a pre-existing MP3 file. If provided, do not convert the flac to MP3 nor delete the MP3 after execution
 - Add post-decision options to optionally play again (defaults to not playing again), with the same or some other bitrate (defaults to the same bitrate)
 - Instead of crashing if the bitrate is not part of the allowed values, round it to the nearest allowed value (and print a message)
 - Add score-keeping using an auto-generated/auto-updated .csv file:
@@ -25,7 +25,7 @@ Compile and run the program. Requires `ffmpeg` (to convert FLAC to mp3) and `mpv
         - Timestamp in UTC format
         - Result (true/false)
         - Input flac file
-        - MP3 bitrate (if the mp3 was provided as an input, use -1)
+        - MP3 bitrate (if the MP3 was provided as an input, use 0)
         - Time elapsed until decision was made
         - Number of swaps until decision was made
         - Whether the start timestamp was changed at some point (true/false)
