@@ -11,26 +11,15 @@ This is an interactive CLI program that tests the user's (and the user's setup) 
 Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv` (to play audio). I included an example FLAC in the assets folder. It also happens to be the goated opening track of the goat's magnum opus.
 
 ## TODOs:
-- Refactor (currently ugly)
+- Refactor main loop (more) (currently ugly)
 - Add options for volume control
 - Add an optional flag that allows passing a pre-existing MP3 file. If provided, do not convert the flac to MP3 nor delete the MP3 after execution
 - Add post-decision options to optionally play again (defaults to not playing again), with the same or some other bitrate (defaults to the same bitrate)
-- Instead of crashing if the bitrate is not part of the allowed values, round it to the nearest allowed value (and print a message)
 - Add score-keeping using an auto-generated/auto-updated .csv file:
     - By default, generate or update file flaco.csv in the current working directory
     - Add an optional flag to disable scorekeeping during the current execution
     - Add an optional flag to provide a custom path for the .csv (replacing the default)
     - Check that the .csv (default or provided) has only the expected columns as its first line
-    - Each row in the .csv file represents one decision made by the user, including:
-        - Timestamp in UTC format
-        - Result (true/false)
-        - Input flac file
-        - MP3 bitrate (if the MP3 was provided as an input, use 0)
-        - Time elapsed until decision was made
-        - Number of swaps until decision was made
-        - Whether the start timestamp was changed at some point (true/false)
-        - Start timestamp of the tracks configured when the decision was made
-        - Volume of the tracks configured when the decision was made
 - Add statistical analysis of previous results .csv
     - By default, use file flaco.csv in the current working directory
     - Reuse the optional flag mentioned above to provide a custom path for the .csv
