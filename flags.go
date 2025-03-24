@@ -28,7 +28,7 @@ func ParseFlags() *Flags {
 
 	if !slices.Contains(availableBitrates, *bitrate) {
 		*bitrate = GetNearest(*bitrate, availableBitrates)
-		fmt.Printf("Bitrate unavailable. Using nearest allowed bitrate %d.\n", *bitrate)
+		fmt.Printf("Bitrate unavailable. Using nearest available bitrate (%dkbps).\n", *bitrate)
 	}
 
 	return &Flags{
