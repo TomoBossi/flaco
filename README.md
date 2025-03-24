@@ -36,7 +36,7 @@ Compile and run the program. Requires `ffmpeg` (to convert FLAC to mp3) and `mpv
     - Reuse the optional flag mentioned above to provide a custom path for the .csv
     - If the .csv file already exists, show the summary after the title when running the program
     - Add an optional flag to only show the summary and exit (ignoring all other flags except the one that optionally provides the path of the .csv)
-    - The summary must at the very least include a table that showing, for each bitrate present in the data:
+    - The summary must at the very least include a table showing, for each bitrate present in the data:
         - User precision (% of successful attempts)
         - Total number of attempts
         - Median number of swaps
