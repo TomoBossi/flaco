@@ -30,8 +30,7 @@ func GetFileHash(path string) string {
 	defer file.Close()
 
 	hash := sha256.New()
-	_, err = io.Copy(hash, file)
-	if err != nil {
+	if _, err = io.Copy(hash, file); err != nil {
 		fmt.Printf("Error copying file %s to hash: %s\n", path, err)
 		os.Exit(1)
 	}
@@ -68,8 +67,7 @@ func GetPath(directory, name, extension string) string {
 func CreateMP3(flac string, bitrate int) string {
 	path := GetPath(os.TempDir(), "temp", "mp3")
 	cmd := exec.Command("ffmpeg", "-i", flac, "-ab", fmt.Sprintf("%dk", bitrate), path)
-	_, err := cmd.Output()
-	if err != nil {
+	if _, err := cmd.Output(); err != nil {
 		fmt.Printf("Error when creating audio file %s: %s\n", path, err)
 		os.Exit(1)
 	}
@@ -77,8 +75,7 @@ func CreateMP3(flac string, bitrate int) string {
 }
 
 func RemoveFile(path string) {
-	err := os.Remove(path)
-	if err != nil {
+	if err := os.Remove(path); err != nil {
 		fmt.Printf("Error when removing file %s: %s\n", path, err)
 		os.Exit(1)
 	}

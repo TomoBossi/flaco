@@ -19,7 +19,7 @@ var title string = `Welcome to flaco! Can you hear the difference?
 
 `
 
-func mainLoop(flac, mp3 string, bitrate int, timestamp string, volume int) *Result {
+func play(flac, mp3 string, bitrate int, timestamp string, volume int) *Result {
 	numSwaps := 0
 	start := time.Now()
 	playFlac := rand.IntN(2) == 0
@@ -103,5 +103,5 @@ func main() {
 
 	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
 
-	mainLoop(flags.flac, mp3, bitrate, "00:00", 65)
+	play(flags.flac, mp3, bitrate, "00:00", 65)
 }
