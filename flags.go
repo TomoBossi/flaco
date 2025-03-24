@@ -14,8 +14,6 @@ type Flags struct {
 	volume  int
 }
 
-var availableBitrates = []int{8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320}
-
 func ParseFlags() *Flags {
 	flac := flag.String("flac", "", "REQUIRED - Path to the input FLAC file")
 	bitrate := flag.Int("bitrate", 128, "Constant bitrate of the temporary MP3 file, measured in kbps. It can be 8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256 or 320") // https://trac.ffmpeg.org/wiki/Encode/MP3#CBREncoding
@@ -40,6 +38,7 @@ func ParseFlags() *Flags {
 		os.Exit(1)
 	}
 
+	availableBitrates := []int{8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320}
 	if !slices.Contains(availableBitrates, *bitrate) {
 		*bitrate = GetNearest(*bitrate, availableBitrates)
 		fmt.Printf("Bitrate unavailable. Using nearest available bitrate of %dkbps.\n", *bitrate)
