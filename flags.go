@@ -45,7 +45,7 @@ func ParseFlags() *Flags {
 		fmt.Printf("Bitrate unavailable. Using nearest available bitrate of %dkbps.\n", *bitrate)
 	}
 
-	if 0 > *volume || 100 < *volume {
+	if *volume < 0 || *volume > 100 {
 		*volume = Clamp(*volume, 0, 100)
 		fmt.Printf("Volume clamped to %d%%.\n", *volume)
 	}
