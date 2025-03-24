@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func PlayAudio(path string, timestamp string, volume int) *exec.Cmd {
+func playAudio(path string, timestamp string, volume int) *exec.Cmd {
 	cmd := exec.Command("mpv", fmt.Sprintf("--start=%s", timestamp), fmt.Sprintf("--volume=%d", volume), path)
 	if err := cmd.Start(); err != nil {
 		fmt.Printf("Error when playing audio file %s: %s\n", path, err)
@@ -22,9 +22,13 @@ func StopAudio(process *exec.Cmd) {
 	}
 }
 
-func PlayOneOf(flac, mp3, timestamp string, volume int, playFlac bool) *exec.Cmd {
-	if playFlac {
-		return PlayAudio(flac, timestamp, volume)
+func PlayOneOf(flac, mp3, timestamp string, volume int, playFlac bool, currentAudioProcess *exec.Cmd) *exec.Cmd {
+	if currentAudioProcess != nil {
+		StopAudio(currentAudioProcess)
 	}
-	return PlayAudio(mp3, timestamp, volume)
+
+	if playFlac {
+		return playAudio(flac, timestamp, volume)
+	}
+	return playAudio(mp3, timestamp, volume)
 }

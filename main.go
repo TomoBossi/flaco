@@ -25,7 +25,7 @@ func play(flac, mp3 string, bitrate int, timestamp string, volume int) *Result {
 	playFlac := rand.IntN(2) == 0
 	startedWithFlac := playFlac
 	scanner := bufio.NewScanner(os.Stdin)
-	audioProcess := PlayOneOf(flac, mp3, timestamp, volume, playFlac)
+	audioProcess := PlayOneOf(flac, mp3, timestamp, volume, playFlac, nil)
 	for {
 		fmt.Printf("PLAYING TRACK %d (started at %s on %d%% volume)\n", (numSwaps)%2+1, timestamp, volume)
 		fmt.Print("What will you do? (s/t/+/-/d) ")
@@ -34,17 +34,13 @@ func play(flac, mp3 string, bitrate int, timestamp string, volume int) *Result {
 			input := scanner.Text()
 			switch input {
 			default:
-				StopAudio(audioProcess)
 				numSwaps++
 				playFlac = !playFlac
-				audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac)
 			case "t":
 				fmt.Print("Please provide a timestamp in mm:ss format: ")
 				if scanner.Scan() {
 					timestamp = scanner.Text()
 				}
-				StopAudio(audioProcess)
-				audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac)
 			case "d":
 				StopAudio(audioProcess)
 				for {
@@ -75,14 +71,12 @@ func play(flac, mp3 string, bitrate int, timestamp string, volume int) *Result {
 					}
 				}
 			case "+":
-				StopAudio(audioProcess)
 				volume = Clamp(volume+5, 0, 100)
-				audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac)
 			case "-":
-				StopAudio(audioProcess)
 				volume = Clamp(volume-5, 0, 100)
-				audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac)
+
 			}
+			audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac, audioProcess)
 		}
 	}
 }
