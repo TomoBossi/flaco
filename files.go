@@ -44,6 +44,11 @@ func GetFileName(path string) string {
 	return filepath.Base(path)
 }
 
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
 func GetPath(directory, name, extension string) string {
 	i := 0
 	var path string
@@ -53,7 +58,7 @@ func GetPath(directory, name, extension string) string {
 		} else {
 			path = filepath.Join(directory, fmt.Sprintf("%s_%d.%s", name, i, extension))
 		}
-		if _, err := os.Stat(path); os.IsNotExist(err) {
+		if !Exists(path) {
 			return path
 		}
 		i++

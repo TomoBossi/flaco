@@ -84,11 +84,16 @@ func main() {
 
 	flags := ParseFlags()
 
-	fmt.Print("Converting FLAC to MP3...\n\n")
-	mp3 := CreateMP3(flags.flac, flags.bitrate)
-	defer RemoveFile(mp3)
+	mp3 := flags.mp3
+	bitrate := 0
+	if mp3 == "" {
+		fmt.Print("Converting FLAC to MP3...\n\n")
+		bitrate = flags.bitrate
+		mp3 = CreateMP3(flags.flac, bitrate)
+		defer RemoveFile(mp3)
+	}
 
 	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Make your decision! (d)\n\n")
 
-	mainLoop(flags.flac, mp3, flags.bitrate, "00:00", 70)
+	mainLoop(flags.flac, mp3, bitrate, "00:00", 65)
 }

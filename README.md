@@ -13,8 +13,7 @@ Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv
 ## TODOs:
 - Refactor main loop (more) (currently ugly)
 - Add options for volume control
-- Add an optional flag that allows passing a pre-existing MP3 file. If provided, do not convert the flac to MP3 nor delete the MP3 after execution
-- Add post-decision options to optionally play again (defaults to not playing again), with the same or some other bitrate (defaults to the same bitrate)
+- Add post-decision options to optionally play again (defaults to not playing again), with the same or some other bitrate (defaults to the same bitrate) unless a pre-existing mp3 was provided
 - Add score-keeping using an auto-generated/auto-updated .csv file:
     - By default, generate or update file flaco.csv in the current working directory
     - Add an optional flag to disable scorekeeping during the current execution

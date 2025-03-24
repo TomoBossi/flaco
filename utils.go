@@ -1,5 +1,23 @@
 package main
 
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
+
+func Clamp(value, inf, sup int) int {
+	return min(max(value, inf), sup)
+}
+
 func abs(x int) int {
 	if x < 0 {
 		return -x
