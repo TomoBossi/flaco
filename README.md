@@ -1,5 +1,14 @@
 # flaco
-*Can **you** hear the difference?* (please read using the ["Gatorade. Is it in you?"](https://www.youtube.com/watch?v=E4B8owXm0Co) cadence)
+*Welcome to flaco! Can **you** hear the difference?* (please read using the ["Gatorade. Is it in you?"](https://www.youtube.com/watch?v=E4B8owXm0Co) cadence)
+```
+ _______ ___     _______ _______ _______ 
+|   _   |   |   |   _   |   _   |   _   | ♪♬
+|.  1___|.  |   |.  1   |.  1___|.  |   |
+|.  __) |.  |___|.  _   |.  |___|.  |   |
+|:  |   |:  1   |:  |   |:  1   |:  1   |
+|::.|   |::.. . |::.|:. |::.. . |::.. . |
+'---'   '-------'--- ---'-------'-------'
+```
 
 ## Why?
 Because I wanted to know if I can reliably tell the difference between 4.1kHz FLAC and MP3 at bitrates upwards of 128kbps.
