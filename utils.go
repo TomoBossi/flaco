@@ -14,7 +14,7 @@ func max(x, y int) int {
 	return y
 }
 
-func Clamp(value, inf, sup int) int {
+func clamp(value, inf, sup int) int {
 	return min(max(value, inf), sup)
 }
 
@@ -25,7 +25,7 @@ func abs(x int) int {
 	return x
 }
 
-func GetNearest(value int, slice []int) int {
+func getNearest(value int, slice []int) int {
 	i := 0
 	for i < len(slice) && value > slice[i] {
 		i++

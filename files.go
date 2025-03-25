@@ -10,18 +10,7 @@ import (
 	"path/filepath"
 )
 
-type Result struct {
-	unixTime    int64
-	fileName    string
-	bitrate     int
-	result      bool
-	numSwaps    int
-	elapsedTime float64
-	timestamp   string
-	fileHash    string
-}
-
-func GetFileHash(path string) string {
+func getFileHash(path string) string {
 	file, err := os.Open(path)
 	if err != nil {
 		fmt.Printf("Error opening file %s: %s\n", path, err)
@@ -39,16 +28,16 @@ func GetFileHash(path string) string {
 	return hex.EncodeToString(hashBytes)
 }
 
-func GetFileName(path string) string {
+func getFileName(path string) string {
 	return filepath.Base(path)
 }
 
-func Exists(path string) bool {
+func exists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
 }
 
-func GetPath(directory, name, extension string) string {
+func getPath(directory, name, extension string) string {
 	i := 0
 	var path string
 	for {
@@ -57,15 +46,15 @@ func GetPath(directory, name, extension string) string {
 		} else {
 			path = filepath.Join(directory, fmt.Sprintf("%s_%d.%s", name, i, extension))
 		}
-		if !Exists(path) {
+		if !exists(path) {
 			return path
 		}
 		i++
 	}
 }
 
-func CreateMP3(flac string, bitrate int) string {
-	path := GetPath(os.TempDir(), "temp", "mp3")
+func createMP3(flac string, bitrate int) string {
+	path := getPath(os.TempDir(), "temp", "mp3")
 	cmd := exec.Command("ffmpeg", "-i", flac, "-ab", fmt.Sprintf("%dk", bitrate), path)
 	if _, err := cmd.Output(); err != nil {
 		fmt.Printf("Error when creating audio file %s: %s\n", path, err)
@@ -74,7 +63,7 @@ func CreateMP3(flac string, bitrate int) string {
 	return path
 }
 
-func RemoveFile(path string) {
+func removeFile(path string) {
 	if err := os.Remove(path); err != nil {
 		fmt.Printf("Error when removing file %s: %s\n", path, err)
 		os.Exit(1)

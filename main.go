@@ -1,14 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"math/rand/v2"
-	"os"
-	"time"
 )
 
-var title string = `Welcome to flaco! Can you hear the difference?
+func main() {
+	fmt.Print(`Welcome to flaco! Can you hear the difference?
  _______ ___     _______ _______ _______ 
 |   _   |   |   |   _   |   _   |   _   | ♪♬
 |.  1___|.  |   |.  1   |.  1___|.  |   |
@@ -17,85 +14,20 @@ var title string = `Welcome to flaco! Can you hear the difference?
 |::.|   |::.. . |::.|:. |::.. . |::.. . |
 '---'   '-------'--- ---'-------'-------'
 
-`
+	`)
 
-func play(flac, mp3 string, bitrate int, timestamp string, volume int) *Result {
-	numSwaps := 0
-	start := time.Now()
-	playFlac := rand.IntN(2) == 0
-	startedWithFlac := playFlac
-	scanner := bufio.NewScanner(os.Stdin)
-	audioProcess := PlayOneOf(flac, mp3, timestamp, volume, playFlac, nil)
-	for {
-		fmt.Printf("PLAYING TRACK %d (started at %s on %d%% volume)\n", (numSwaps)%2+1, timestamp, volume)
-		fmt.Print("What will you do? (s/t/+/-/d) ")
-		if scanner.Scan() {
-			fmt.Print("\n")
-			input := scanner.Text()
-			switch input {
-			default:
-				numSwaps++
-				playFlac = !playFlac
-			case "t":
-				fmt.Print("Please provide a timestamp in mm:ss format: ")
-				if scanner.Scan() {
-					timestamp = scanner.Text()
-				}
-			case "d":
-				StopAudio(audioProcess)
-				for {
-					fmt.Print("Which of the two was the FLAC file? (1/2) ")
-					if scanner.Scan() {
-						fmt.Print("\n")
-						input = scanner.Text()
-						if input != "1" && input != "2" {
-							fmt.Print("Invalid input.\n\n")
-						} else {
-							result := (input == "1" && startedWithFlac) || (input == "2" && !startedWithFlac)
-							if result {
-								fmt.Print("Correct! Bye-bye.\n")
-							} else {
-								fmt.Print("Wrong! Bye-bye.\n")
-							}
-							return &Result{
-								unixTime:    time.Now().Unix(),
-								fileName:    GetFileName(flac),
-								bitrate:     bitrate,
-								result:      result,
-								numSwaps:    numSwaps,
-								elapsedTime: time.Now().Sub(start).Seconds(),
-								timestamp:   timestamp,
-								fileHash:    GetFileHash(flac),
-							}
-						}
-					}
-				}
-			case "+":
-				volume = Clamp(volume+5, 0, 100)
-			case "-":
-				volume = Clamp(volume-5, 0, 100)
+	flags := NewFlags()
 
-			}
-			audioProcess = PlayOneOf(flac, mp3, timestamp, volume, playFlac, audioProcess)
-		}
-	}
-}
-
-func main() {
-	fmt.Print(title)
-
-	flags := ParseFlags()
-
-	mp3 := flags.mp3
+	mp3 := flags.Mp3()
 	bitrate := 0
 	if mp3 == "" {
 		fmt.Print("Converting FLAC to MP3...\n\n")
-		bitrate = flags.bitrate
-		mp3 = CreateMP3(flags.flac, bitrate)
-		defer RemoveFile(mp3)
+		bitrate = flags.Bitrate()
+		mp3 = createMP3(flags.Flac(), bitrate)
+		defer removeFile(mp3)
 	}
 
 	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
 
-	play(flags.flac, mp3, bitrate, "00:00", flags.volume)
+	NewResult(flags.Flac(), mp3, bitrate, "00:00", flags.Volume())
 }

@@ -15,16 +15,16 @@ func playAudio(path string, timestamp string, volume int) *exec.Cmd {
 	return cmd
 }
 
-func StopAudio(process *exec.Cmd) {
+func stopAudio(process *exec.Cmd) {
 	if err := process.Process.Kill(); err != nil {
 		fmt.Printf("Error when stopping audio: %s\n", err)
 		os.Exit(1)
 	}
 }
 
-func PlayOneOf(flac, mp3, timestamp string, volume int, playFlac bool, currentAudioProcess *exec.Cmd) *exec.Cmd {
+func playOneOf(flac, mp3, timestamp string, volume int, playFlac bool, currentAudioProcess *exec.Cmd) *exec.Cmd {
 	if currentAudioProcess != nil {
-		StopAudio(currentAudioProcess)
+		stopAudio(currentAudioProcess)
 	}
 
 	if playFlac {
