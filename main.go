@@ -37,10 +37,9 @@ func main() {
 
 	fmt.Print("Options:\n- Swap tracks (s, default)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
 
-	res, err := NewResult(flags.Flac(), mp3, bitrate, "00:00", flags.Volume())
+	_, err = NewResult(flags.Flac(), mp3, bitrate, "00:00", flags.Volume())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(res)
 }
