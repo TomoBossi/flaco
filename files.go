@@ -10,34 +10,32 @@ import (
 	"path/filepath"
 )
 
-func getFileHash(path string) string {
+func getFileHash(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		fmt.Printf("Error opening file %s: %s\n", path, err)
-		os.Exit(1)
+		return "", fmt.Errorf("Error opening file %s:\n\t%s", path, err)
 	}
 	defer file.Close()
 
 	hash := sha256.New()
 	if _, err = io.Copy(hash, file); err != nil {
-		fmt.Printf("Error copying file %s to hash: %s\n", path, err)
-		os.Exit(1)
+		return "", fmt.Errorf("Error copying file %s to get its hash:\n\t%s", path, err)
 	}
 
 	hashBytes := hash.Sum(nil)
-	return hex.EncodeToString(hashBytes)
+	return hex.EncodeToString(hashBytes), nil
 }
 
 func getFileName(path string) string {
 	return filepath.Base(path)
 }
 
-func exists(path string) bool {
+func exists(path string) (bool, error) {
 	_, err := os.Stat(path)
-	return err == nil
+	return err == nil, err
 }
 
-func getPath(directory, name, extension string) string {
+func getPath(directory, name, extension string) (string, error) {
 	i := 0
 	var path string
 	for {
@@ -46,26 +44,31 @@ func getPath(directory, name, extension string) string {
 		} else {
 			path = filepath.Join(directory, fmt.Sprintf("%s_%d.%s", name, i, extension))
 		}
-		if !exists(path) {
-			return path
+		if pathExists, err := exists(path); !pathExists {
+			return path, nil
+		} else if !os.IsNotExist(err) {
+			return "", fmt.Errorf("Error getting new file path:\n\t%s", err)
 		}
 		i++
 	}
 }
 
-func createMP3(flac string, bitrate int) string {
-	path := getPath(os.TempDir(), "temp", "mp3")
+func createMP3(flac string, bitrate int) (string, error) {
+	path, err := getPath(os.TempDir(), "temp", "mp3")
+	if err != nil {
+		return "", err
+	}
 	cmd := exec.Command("ffmpeg", "-i", flac, "-ab", fmt.Sprintf("%dk", bitrate), path)
 	if _, err := cmd.Output(); err != nil {
-		fmt.Printf("Error when creating audio file %s: %s\n", path, err)
-		os.Exit(1)
+		return "", fmt.Errorf("Error when creating audio file %s:\n\t%s", path, err)
 	}
-	return path
+	return path, nil
 }
 
-func removeFile(path string) {
-	if err := os.Remove(path); err != nil {
-		fmt.Printf("Error when removing file %s: %s\n", path, err)
-		os.Exit(1)
+func removeFile(path string) error {
+	err := os.Remove(path)
+	if err != nil {
+		return fmt.Errorf("Error when removing file %s:\n\t%s", path, err)
 	}
+	return nil
 }
