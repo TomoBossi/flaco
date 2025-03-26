@@ -64,7 +64,7 @@ func main() {
 								newBitrate = getNearestBitrate(newBitrate)
 								if newBitrate != bitrate {
 									bitrate = newBitrate
-									mp3, err := flac2Mp3(flags.Flac(), bitrate)
+									mp3, err = flac2Mp3(flags.Flac(), bitrate)
 									if err != nil {
 										fmt.Println(err.Error())
 										return
