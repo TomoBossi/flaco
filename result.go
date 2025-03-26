@@ -27,7 +27,7 @@ func NewResult(flac, mp3 string, bitrate int, timestamp string, volume int) (*re
 	if err != nil {
 		return nil, err
 	}
-	flacSamplingRate, flacBitDepth, err := getAudioInfo(flac)
+	flacSamplingRate, flacBitDepth, err := getFlacInfo(flac)
 	if err != nil {
 		return nil, err
 	}
