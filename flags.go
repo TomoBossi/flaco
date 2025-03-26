@@ -13,6 +13,15 @@ type flags struct {
 	volume  int
 }
 
+func getNearestBitrate(bitrate int) int {
+	availableBitrates := []int{8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320}
+	if !slices.Contains(availableBitrates, bitrate) {
+		bitrate = getNearest(bitrate, availableBitrates)
+		fmt.Printf("Bitrate unavailable. Using nearest available bitrate of %dkbps.\n", bitrate)
+	}
+	return bitrate
+}
+
 func NewFlags() (*flags, error) {
 	flac := flag.String("flac", "", "REQUIRED - Path to the input FLAC file")
 	bitrate := flag.Int("bitrate", 128, "Constant bitrate of the temporary MP3 file, measured in kbps. It can be 8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256 or 320") // https://trac.ffmpeg.org/wiki/Encode/MP3#CBREncoding
@@ -26,18 +35,14 @@ func NewFlags() (*flags, error) {
 	}
 
 	if flacExists, err := exists(*flac); !flacExists {
-		return nil, fmt.Errorf("Error: FLAC file not found:\n\t%s", err)
+		return nil, fmt.Errorf("Error: FLAC file not found:\n\t%s", err.Error())
 	}
 
-	if mp3Exists, err := exists(*mp3); !mp3Exists {
-		return nil, fmt.Errorf("Error: MP3 file not found:\n\t%s", err)
+	if mp3Exists, err := exists(*mp3); *mp3 != "" && !mp3Exists {
+		return nil, fmt.Errorf("Error: MP3 file not found:\n\t%s", err.Error())
 	}
 
-	availableBitrates := []int{8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320}
-	if !slices.Contains(availableBitrates, *bitrate) {
-		*bitrate = getNearest(*bitrate, availableBitrates)
-		fmt.Printf("Bitrate unavailable. Using nearest available bitrate of %dkbps.\n", *bitrate)
-	}
+	*bitrate = getNearestBitrate(*bitrate)
 
 	if *volume < 0 || *volume > 100 {
 		*volume = clamp(*volume, 0, 100)

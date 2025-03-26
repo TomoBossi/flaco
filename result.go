@@ -42,11 +42,10 @@ func NewResult(flac, mp3 string, bitrate int, timestamp string, volume int) (*re
 	}
 	for {
 		fmt.Printf("PLAYING TRACK %d (started at %s on %d%% volume)\n", (numSwaps)%2+1, timestamp, volume)
-		fmt.Print("What will you do? (s/t/+/-/d) ")
+		fmt.Print("What will you do? (S/t/+/-/d) ")
 		if scanner.Scan() {
 			fmt.Print("\n")
-			input := scanner.Text()
-			switch input {
+			switch scanner.Text() {
 			default:
 				numSwaps++
 				playFlac = !playFlac
@@ -63,15 +62,15 @@ func NewResult(flac, mp3 string, bitrate int, timestamp string, volume int) (*re
 					fmt.Print("Which of the two was the FLAC file? (1/2) ")
 					if scanner.Scan() {
 						fmt.Print("\n")
-						input = scanner.Text()
+						input := scanner.Text()
 						if input != "1" && input != "2" {
 							fmt.Print("Invalid input.\n\n")
 						} else {
 							success := (input == "1" && startedWithFlac) || (input == "2" && !startedWithFlac)
 							if success {
-								fmt.Print("Correct! Bye-bye.\n")
+								fmt.Print("Correct!\n\n")
 							} else {
-								fmt.Print("Wrong! Bye-bye.\n")
+								fmt.Print("Wrong!\n\n")
 							}
 							return &result{
 								unixTime:         time.Now().Unix(),

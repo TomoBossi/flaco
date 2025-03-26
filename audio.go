@@ -8,12 +8,12 @@ import (
 )
 
 func getAudioInfo(path string) (int, int, error) {
-	cmd := exec.Command("ffmpeg", "-i", path)
+	cmd := exec.Command("ffmpeg", "-f", "null", "-", "-i", path)
 	var out bytes.Buffer
 	cmd.Stderr = &out
 	err := cmd.Run()
 	if err != nil {
-		return 0, 0, fmt.Errorf("Error when getting info from audio file %s:\n\t%s", path, err)
+		return 0, 0, fmt.Errorf("Error when getting info of audio file %s:\n\t%s", path, err.Error())
 	}
 	info := out.String()
 
@@ -22,7 +22,7 @@ func getAudioInfo(path string) (int, int, error) {
 	if len(matches) > 1 {
 		_, err = fmt.Sscanf(matches[1], "%d", &samplingRate)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Error when parsing sampling rate info from audio file %s:\n\t%s", path, err)
+			return 0, 0, fmt.Errorf("Error when parsing sampling rate info of audio file %s:\n\t%s", path, err.Error())
 		}
 	}
 
@@ -31,7 +31,7 @@ func getAudioInfo(path string) (int, int, error) {
 	if len(matches) > 1 {
 		_, err = fmt.Sscanf(matches[1], "%d", &bitDepth)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Error when parsing bit depth info from audio file %s:\n\t%s", path, err)
+			return 0, 0, fmt.Errorf("Error when parsing bit depth info of audio file %s:\n\t%s", path, err.Error())
 		}
 	}
 
@@ -41,7 +41,7 @@ func getAudioInfo(path string) (int, int, error) {
 func playAudio(path string, timestamp string, volume int) (*exec.Cmd, error) {
 	cmd := exec.Command("mpv", fmt.Sprintf("--start=%s", timestamp), fmt.Sprintf("--volume=%d", volume), path)
 	if err := cmd.Start(); err != nil {
-		return nil, fmt.Errorf("Error when playing audio file %s:\n\t%s", path, err)
+		return nil, fmt.Errorf("Error when playing audio file %s:\n\t%s", path, err.Error())
 	}
 	return cmd, nil
 }
@@ -49,7 +49,7 @@ func playAudio(path string, timestamp string, volume int) (*exec.Cmd, error) {
 func stopAudio(process *exec.Cmd) error {
 	err := process.Process.Kill()
 	if err != nil {
-		return fmt.Errorf("Error when stopping audio:\n\t%s", err)
+		return fmt.Errorf("Error when stopping audio:\n\t%s", err.Error())
 	}
 	return nil
 }

@@ -20,7 +20,6 @@ This is an interactive CLI program that tests the user's (and the user's setup) 
 Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv` (to play audio). I included an example FLAC in the assets folder. It also happens to be the goated opening track of the goat's magnum opus.
 
 ## TODOs:
-- Add post-decision options to optionally play again (defaults to not playing again), with the same or some other bitrate (defaults to the same bitrate) unless a pre-existing mp3 was provided
 - Add score-keeping using an auto-generated/auto-updated .csv file:
     - By default, generate or update file flaco.csv in the current working directory
     - Add an optional flag to disable scorekeeping during the current execution
