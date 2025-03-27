@@ -17,4 +17,4 @@ Because I wanted to know if I can reliably tell the difference between 4.1kHz FL
 This is an interactive CLI program that tests the user's (and the user's setup) ability to discern high-fidelity uncompressed audio from standard audio. It takes a FLAC file as a parameter and allows the user to alternate between playing the original FLAC and a compressed MP3 version of it, without revealing which is which. When the user is ready, the program will ask and finally reveal which of the two was the FLAC file.
 
 ## How?
-Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv` (to play audio). I included an example FLAC in the assets folder. It also happens to be the goated opening track of the goat's magnum opus.
+Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3 and get file info) and `mpv` (to play audio).

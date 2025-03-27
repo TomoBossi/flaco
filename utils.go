@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"slices"
+	"strconv"
 )
 
 func min(x, y int) int {
@@ -99,4 +100,11 @@ func fmtBool(value bool, fmtTrue, fmtFalse string) string {
 		return fmtTrue
 	}
 	return fmtFalse
+}
+
+func fmtBitrate(bitrate int) string {
+	if bitrate == 0 {
+		return "Custom file"
+	}
+	return strconv.Itoa(bitrate)
 }

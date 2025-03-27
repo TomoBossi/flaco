@@ -21,7 +21,6 @@ func main() {
 |:  |   |:  1   |:  |   |:  1   |:  1   |
 |::.|   |::.. . |::.|:. |::.. . |::.. . |
 '---'   '-------'--- ---'-------'-------'
-
 `)
 	defer fmt.Print("\nSee you space flaco...\n\n")
 
@@ -57,18 +56,17 @@ func main() {
 		}
 		slices.Sort(bitrates)
 		if len(bitrates) > 0 {
-			fmt.Print("Summary of previous results:\n")
-			fmt.Print("-----------------------------------------------------------------------------------------------\n")
+			fmt.Print("\nSummary of previous results:\n")
+			fmt.Printf("%s\n", strings.Repeat("-", 95))
 			writer := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
 			fmt.Fprintln(writer, strings.Join(SummaryFields(), "\t"))
 			for _, bitrate := range bitrates {
 				fmt.Fprintln(writer, summaries[bitrate].SummaryValuesTSV())
 			}
 			writer.Flush()
-			fmt.Print("-----------------------------------------------------------------------------------------------\n")
-			if !flags.Summary() {
-				fmt.Print("\n")
-			}
+			fmt.Printf("%s\n", strings.Repeat("-", 95))
+		} else {
+			fmt.Print("\nThere are no results to summarize.\n")
 		}
 	}
 
@@ -86,7 +84,7 @@ func main() {
 			defer removeFile(mp3)
 		}
 
-		fmt.Print("Options:\n- Swap tracks (S)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
+		fmt.Print("\nOptions:\n- Swap tracks (S)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
 
 		for {
 			res, err := NewResult(flags.Flac(), mp3, bitrate, timestamp, flags.Volume())

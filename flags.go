@@ -22,7 +22,7 @@ func getNearestBitrate(bitrate int) int {
 	availableBitrates := []int{8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320}
 	if !slices.Contains(availableBitrates, bitrate) {
 		bitrate = getNearest(bitrate, availableBitrates)
-		fmt.Printf("Bitrate unavailable. Using nearest available bitrate of %dkbps.\n\n", bitrate)
+		fmt.Printf("\nBitrate unavailable. Using nearest available bitrate of %dkbps.\n", bitrate)
 	}
 	return bitrate
 }
@@ -74,7 +74,9 @@ func NewFlags() (*flags, error) {
 		}
 	}
 
-	*bitrate = getNearestBitrate(*bitrate)
+	if *mp3 == "" && !*summary {
+		*bitrate = getNearestBitrate(*bitrate)
+	}
 
 	if *volume < 0 || *volume > 100 {
 		*volume = clamp(*volume, 0, 100)

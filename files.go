@@ -62,7 +62,7 @@ func getPath(directory, name, extension string) (string, error) {
 }
 
 func flac2Mp3(flac string, bitrate int) (string, error) {
-	fmt.Print("Converting FLAC to MP3...\n\n")
+	fmt.Print("\nConverting FLAC to MP3...\n")
 	path, err := getPath(os.TempDir(), "temp", "mp3")
 	if err != nil {
 		return "", err

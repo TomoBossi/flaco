@@ -95,5 +95,5 @@ func SummaryFields() []string {
 }
 
 func (s summary) SummaryValuesTSV() string {
-	return fmt.Sprintf("%d\t%-*s of %d\t%.0f\t%.2f\t%s", s.mp3Bitrate, 4, fmt.Sprintf("%.0f%%", s.successRate*100), s.numResults, s.medianNumSwaps, s.meanElapsedTime, fmtBool(s.significant, "Yes", "No"))
+	return fmt.Sprintf("%s\t%-*s of %d\t%.0f\t%.2f\t%s", fmtBitrate(s.mp3Bitrate), 4, fmt.Sprintf("%.0f%%", s.successRate*100), s.numResults, s.medianNumSwaps, s.meanElapsedTime, fmtBool(s.significant, "Yes", "No"))
 }
