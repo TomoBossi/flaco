@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/csv"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -10,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 func getFileHash(path string) (string, error) {
@@ -28,8 +30,12 @@ func getFileHash(path string) (string, error) {
 	return hex.EncodeToString(hashBytes), nil
 }
 
-func getFileName(path string) string {
-	return filepath.Base(path)
+func getFileName(path string, removeExtension bool) string {
+	fileName := filepath.Base(path)
+	if !removeExtension {
+		return fileName
+	}
+	return strings.TrimSuffix(fileName, filepath.Ext(fileName))
 }
 
 func exists(path string) (bool, error) {
@@ -74,4 +80,62 @@ func removeFile(path string) error {
 		return fmt.Errorf("Error when removing file %s:\n\t%s", path, err.Error())
 	}
 	return nil
+}
+
+func matchCSVHeader(path string, columns []string) (bool, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return false, fmt.Errorf("Error opening file %s:\n\t%s", path, err.Error())
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	header, err := reader.Read()
+	if err != nil {
+		return false, fmt.Errorf("Error when getting header of CSV file %s:\n\t%s", path, err.Error())
+	}
+
+	if len(header) != len(columns) {
+		return false, nil
+	}
+
+	for i, field := range header {
+		if strings.TrimSpace(field) != strings.TrimSpace(columns[i]) {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func newResultsFromCSV(path string) ([]*result, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("Error opening file %s:\n\t%s", path, err.Error())
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	_, err = reader.Read()
+	if err != nil {
+		return nil, fmt.Errorf("Error when getting header of CSV file %s:\n\t%s", path, err.Error())
+	}
+
+	results := []*result{}
+	for {
+		record, err := reader.Read()
+		if err != nil {
+			if err.Error() == "EOF" {
+				break
+			}
+			return nil, fmt.Errorf("Error when reading a record of CSV file %s:\n\t%s", path, err.Error())
+		}
+		res, err := NewResultFromValues(record)
+		if err != nil {
+			return nil, fmt.Errorf("Error when parsing a record of CSV file %s as a result struct:\n\t%s", path, err.Error())
+		}
+		results = append(results, res)
+	}
+
+	return results, nil
 }

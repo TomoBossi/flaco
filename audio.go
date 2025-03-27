@@ -13,7 +13,7 @@ func getFlacInfo(flac string) (int, int, error) {
 	cmd.Stderr = &out
 	err := cmd.Run()
 	if err != nil {
-		return 0, 0, fmt.Errorf("Error when getting info of audio file %s:\n\t%s", flac, err.Error())
+		return 0, 0, fmt.Errorf("Error when getting info of FLAC file %s:\n\t%s", flac, err.Error())
 	}
 	info := out.String()
 
@@ -22,7 +22,7 @@ func getFlacInfo(flac string) (int, int, error) {
 	if len(matches) > 1 {
 		_, err = fmt.Sscanf(matches[1], "%d", &samplingRate)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Error when parsing sampling rate info of audio file %s:\n\t%s", flac, err.Error())
+			return 0, 0, fmt.Errorf("Error when parsing sampling rate info of FLAC file %s:\n\t%s", flac, err.Error())
 		}
 	}
 
@@ -31,7 +31,7 @@ func getFlacInfo(flac string) (int, int, error) {
 	if len(matches) > 1 {
 		_, err = fmt.Sscanf(matches[1], "%d", &bitDepth)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Error when parsing bit depth info of audio file %s:\n\t%s", flac, err.Error())
+			return 0, 0, fmt.Errorf("Error when parsing bit depth info of FLAC file %s:\n\t%s", flac, err.Error())
 		}
 	}
 
