@@ -18,12 +18,3 @@ This is an interactive CLI program that tests the user's (and the user's setup) 
 
 ## How?
 Compile and run the program. Requires `ffmpeg` (to convert FLAC to MP3) and `mpv` (to play audio). I included an example FLAC in the assets folder. It also happens to be the goated opening track of the goat's magnum opus.
-
-## TODOs:
-- Display statistical analysis of previous results .csv after the title when running the program
-- For each bitrate present in the data, display a table including:
-    - User precision (% of successful attempts)
-    - Total number of attempts
-    - Median number of swaps
-    - Median total time elapsed
-    - Estimation of the degree to which the results are explained by pure randomness

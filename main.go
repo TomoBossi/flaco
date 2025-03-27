@@ -5,10 +5,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
+	"strings"
+	"text/tabwriter"
 )
 
 func main() {
+	fmt.Print("\n")
 	fmt.Print(`Welcome to flaco! Can you hear the difference?
  _______ ___     _______ _______ _______
 |   _   |   |   |   _   |   _   |   _   | ♪♬
@@ -19,6 +23,7 @@ func main() {
 '---'   '-------'--- ---'-------'-------'
 
 `)
+	defer fmt.Print("\nSee you space flaco...\n\n")
 
 	flags, err := NewFlags()
 	if err != nil {
@@ -36,12 +41,35 @@ func main() {
 		}
 		defer csvFile.Close()
 
-		// TODO: Read and process CSV, output and print statistical summary
-		// results, _ := newResultsFromCSV(flags.History())
-		// for _, r := range results {
-		// 	fmt.Println(*r)
-		// }
-		// fmt.Println()
+		results, err := newResultsFromCSV(flags.History())
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		summaries, err := summarize(results)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		bitrates := []int{}
+		for bitrate := range summaries {
+			bitrates = append(bitrates, bitrate)
+		}
+		slices.Sort(bitrates)
+		if len(bitrates) > 0 {
+			fmt.Print("Summary of previous results:\n")
+			fmt.Print("-----------------------------------------------------------------------------------------------\n")
+			writer := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
+			fmt.Fprintln(writer, strings.Join(SummaryFields(), "\t"))
+			for _, bitrate := range bitrates {
+				fmt.Fprintln(writer, summaries[bitrate].SummaryValuesTSV())
+			}
+			writer.Flush()
+			fmt.Print("-----------------------------------------------------------------------------------------------\n")
+			if !flags.Summary() {
+				fmt.Print("\n")
+			}
+		}
 	}
 
 	if !flags.Summary() {
@@ -58,7 +86,7 @@ func main() {
 			defer removeFile(mp3)
 		}
 
-		fmt.Print("\nOptions:\n- Swap tracks (S)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
+		fmt.Print("Options:\n- Swap tracks (S)\n- Change start timestamp (t)\n- Increase/lower volume (+/-)\n- Make your decision! (d)\n\n")
 
 		for {
 			res, err := NewResult(flags.Flac(), mp3, bitrate, timestamp, flags.Volume())
@@ -107,7 +135,6 @@ func main() {
 					fmt.Print("\n")
 				}
 			} else {
-				fmt.Print("\nSee you space flaco...\n")
 				return
 			}
 		}

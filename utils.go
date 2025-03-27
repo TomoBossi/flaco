@@ -1,6 +1,10 @@
 package main
 
-import "math"
+import (
+	"fmt"
+	"math"
+	"slices"
+)
 
 func min(x, y int) int {
 	if x < y {
@@ -61,4 +65,38 @@ func rightTailedBinomialTest(n, k int, p float64) float64 {
 		pValue += binomialPMF(n, i, p)
 	}
 	return pValue
+}
+
+func mean(slice []float64) (float64, error) {
+	n := len(slice)
+	if n == 0 {
+		return 0.0, fmt.Errorf("Error: Cannot find mean of empty slice.")
+	}
+
+	sum := 0.0
+	for _, value := range slice {
+		sum += value
+	}
+	return sum / float64(n), nil
+}
+
+func median(slice []int) (float64, error) {
+	n := len(slice)
+	if n == 0 {
+		return 0.0, fmt.Errorf("Error: Cannot find median of empty slice.")
+	}
+
+	slices.Sort(slice)
+	if n%2 == 1 {
+		return float64(slice[n/2]), nil
+	} else {
+		return float64(slice[n/2-1]+slice[n/2]) / 2.0, nil
+	}
+}
+
+func fmtBool(value bool, fmtTrue, fmtFalse string) string {
+	if value {
+		return fmtTrue
+	}
+	return fmtFalse
 }

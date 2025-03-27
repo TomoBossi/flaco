@@ -16,7 +16,7 @@ type result struct {
 	flacSamplingRate int
 	flacBitDepth     int
 	mp3Bitrate       int
-	result           bool
+	success          bool
 	numSwaps         int
 	elapsedTime      float64
 	timestamp        string
@@ -80,7 +80,7 @@ func NewResult(flac, mp3 string, bitrate int, timestamp string, volume int) (*re
 								flacSamplingRate: flacSamplingRate,
 								flacBitDepth:     flacBitDepth,
 								mp3Bitrate:       bitrate,
-								result:           success,
+								success:          success,
 								numSwaps:         numSwaps,
 								elapsedTime:      time.Now().Sub(start).Seconds(),
 								timestamp:        timestamp,
@@ -129,7 +129,7 @@ func NewResultFromValues(values []string) (*result, error) {
 
 	success, err := strconv.ParseBool(values[6])
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to bool (result):\n\t%s", values[7], err.Error())
+		return nil, fmt.Errorf("Error when converting string %s to bool (success):\n\t%s", values[7], err.Error())
 	}
 
 	numSwaps, err := strconv.Atoi(values[7])
@@ -149,7 +149,7 @@ func NewResultFromValues(values []string) (*result, error) {
 		flacSamplingRate: flacSamplingRate,
 		flacBitDepth:     flacBitDepth,
 		mp3Bitrate:       mp3Bitrate,
-		result:           success,
+		success:          success,
 		numSwaps:         numSwaps,
 		elapsedTime:      elapsedTime,
 		timestamp:        values[9],
@@ -180,8 +180,8 @@ func (r result) Mp3Bitrate() int {
 	return r.mp3Bitrate
 }
 
-func (r result) Result() bool {
-	return r.result
+func (r result) Success() bool {
+	return r.success
 }
 
 func (r result) NumSwaps() int {
@@ -197,9 +197,9 @@ func (r result) Timestamp() string {
 }
 
 func ResultFields() []string {
-	return []string{"unixTime(s)", "flacFileName", "flacFileHash", "flacSamplingRate(Hz)", "flacBitDepth", "mp3Bitrate(kbps)", "result", "numSwaps", "elapsedTime(s)", "timestamp(mm:ss)"}
+	return []string{"unixTime(s)", "flacFileName", "flacFileHash", "flacSamplingRate(Hz)", "flacBitDepth", "mp3Bitrate(kbps)", "success", "numSwaps", "elapsedTime(s)", "timestamp(mm:ss)"}
 }
 
 func (r result) ResultValuesCSV() string {
-	return fmt.Sprintf("%d,%s,%s,%d,%d,%d,%t,%d,%f,%s", r.unixTime, r.flacFileName, r.flacFileHash, r.flacSamplingRate, r.flacBitDepth, r.mp3Bitrate, r.result, r.numSwaps, r.elapsedTime, r.timestamp)
+	return fmt.Sprintf("%d,%s,%s,%d,%d,%d,%t,%d,%f,%s", r.unixTime, r.flacFileName, r.flacFileHash, r.flacSamplingRate, r.flacBitDepth, r.mp3Bitrate, r.success, r.numSwaps, r.elapsedTime, r.timestamp)
 }
