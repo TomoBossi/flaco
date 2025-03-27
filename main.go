@@ -26,7 +26,7 @@ func main() {
 
 	flags, err := NewFlags()
 	if err != nil {
-		fmt.Printf("%s\n\n", err.Error())
+		fmt.Printf("\n%s\n\n", err.Error())
 		flag.Usage()
 		return
 	}
@@ -42,12 +42,12 @@ func main() {
 
 		results, err := newResultsFromCSV(flags.History())
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Printf("\n%s\n", err.Error())
 			return
 		}
 		summaries, err := summarize(results)
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Printf("\n%s\n", err.Error())
 			return
 		}
 		bitrates := []int{}
@@ -78,7 +78,7 @@ func main() {
 			bitrate = flags.Bitrate()
 			mp3, err = flac2Mp3(flags.Flac(), bitrate)
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Printf("\n%s\n", err.Error())
 				return
 			}
 			defer removeFile(mp3)
@@ -89,7 +89,7 @@ func main() {
 		for {
 			res, err := NewResult(flags.Flac(), mp3, bitrate, timestamp, flags.Volume())
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Printf("\n%s\n", err.Error())
 				return
 			}
 
@@ -120,7 +120,7 @@ func main() {
 										bitrate = newBitrate
 										mp3, err = flac2Mp3(flags.Flac(), bitrate)
 										if err != nil {
-											fmt.Println(err.Error())
+											fmt.Printf("\n%s\n", err.Error())
 											return
 										}
 										defer removeFile(mp3)
