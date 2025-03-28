@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"slices"
 	"strconv"
+
+	"gonum.org/v1/gonum/stat/distuv"
 )
 
 func min(x, y int) int {
@@ -43,29 +44,8 @@ func getNearest(value int, slice []int) int {
 	return slice[i]
 }
 
-func factorial(n int) int {
-	if n == 0 {
-		return 1
-	}
-	return n * factorial(n-1)
-}
-
-func c(n, k int) int {
-	if k > n {
-		return 0
-	}
-	return factorial(n) / (factorial(k) * factorial(n-k))
-}
-func binomialPMF(n, k int, p float64) float64 {
-	return float64(c(n, k)) * math.Pow(p, float64(k)) * math.Pow(1-p, float64(n-k))
-}
-
 func rightTailedBinomialTest(n, k int, p float64) float64 {
-	pValue := 0.0
-	for i := k; i <= n; i++ {
-		pValue += binomialPMF(n, i, p)
-	}
-	return pValue
+	return 1.0 - distuv.Binomial{N: float64(n), P: p}.CDF(float64(k))
 }
 
 func mean(slice []float64) (float64, error) {
@@ -107,4 +87,11 @@ func fmtBitrate(bitrate int) string {
 		return "Custom file"
 	}
 	return strconv.Itoa(bitrate)
+}
+
+func fmtNumResults(numResults int) string {
+	if numResults > 9999 {
+		return "many"
+	}
+	return strconv.Itoa(numResults)
 }
