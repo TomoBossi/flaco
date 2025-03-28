@@ -49,6 +49,10 @@ func NewFlags() (*flags, error) {
 		return nil, fmt.Errorf("Error: FLAC file not found:\n\t%s", err.Error())
 	}
 
+	if *flac != "" && !*summary && filepath.Ext(*flac) != ".flac" {
+		return nil, fmt.Errorf("Error: FLAC file file must have a .flac extension.")
+	}
+
 	if mp3Exists, err := exists(*mp3); *mp3 != "" && !mp3Exists && !*summary {
 		return nil, fmt.Errorf("Error: MP3 file not found:\n\t%s", err.Error())
 	}
