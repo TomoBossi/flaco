@@ -45,11 +45,11 @@ func NewFlags() (*flags, error) {
 		return nil, fmt.Errorf("Error: Previous history CSV file not provided.")
 	}
 
-	if flacExists, err := exists(*flac); *flac != "" && !flacExists {
+	if flacExists, err := exists(*flac); *flac != "" && !flacExists && !*summary {
 		return nil, fmt.Errorf("Error: FLAC file not found:\n\t%s", err.Error())
 	}
 
-	if mp3Exists, err := exists(*mp3); *mp3 != "" && !mp3Exists {
+	if mp3Exists, err := exists(*mp3); *mp3 != "" && !mp3Exists && !*summary {
 		return nil, fmt.Errorf("Error: MP3 file not found:\n\t%s", err.Error())
 	}
 
@@ -78,9 +78,9 @@ func NewFlags() (*flags, error) {
 		*bitrate = getNearestBitrate(*bitrate)
 	}
 
-	if *volume < 0 || *volume > 100 {
+	if (*volume < 0 || *volume > 100) && !*summary {
 		*volume = clamp(*volume, 0, 100)
-		fmt.Printf("Volume clamped to %d%%.\n\n", *volume)
+		fmt.Printf("\nVolume clamped to %d%%.\n", *volume)
 	}
 
 	return &flags{
