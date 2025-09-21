@@ -17,13 +17,13 @@ import (
 func getFileHash(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return "", fmt.Errorf("Error opening file %s:\n\t%s", path, err.Error())
+		return "", fmt.Errorf("error opening file %s:\n\t%s", path, err.Error())
 	}
 	defer file.Close()
 
 	hash := sha256.New()
 	if _, err = io.Copy(hash, file); err != nil {
-		return "", fmt.Errorf("Error copying file %s to get its hash:\n\t%s", path, err.Error())
+		return "", fmt.Errorf("error copying file %s to get its hash:\n\t%s", path, err.Error())
 	}
 
 	hashBytes := hash.Sum(nil)
@@ -55,7 +55,7 @@ func getPath(directory, name, extension string) (string, error) {
 		if pathExists, err := exists(path); !pathExists && errors.Is(err, fs.ErrNotExist) {
 			return path, nil
 		} else if err != nil {
-			return "", fmt.Errorf("Error getting new file path:\n\t%s", err.Error())
+			return "", fmt.Errorf("error getting new file path:\n\t%s", err.Error())
 		}
 		i++
 	}
@@ -69,7 +69,7 @@ func flac2Mp3(flac string, bitrate int) (string, error) {
 	}
 	cmd := exec.Command("ffmpeg", "-i", flac, "-ab", fmt.Sprintf("%dk", bitrate), path)
 	if _, err := cmd.Output(); err != nil {
-		return "", fmt.Errorf("Error when creating audio file %s:\n\t%s", path, err.Error())
+		return "", fmt.Errorf("error when creating audio file %s:\n\t%s", path, err.Error())
 	}
 	return path, nil
 }
@@ -77,7 +77,7 @@ func flac2Mp3(flac string, bitrate int) (string, error) {
 func removeFile(path string) error {
 	err := os.Remove(path)
 	if err != nil {
-		return fmt.Errorf("Error when removing file %s:\n\t%s", path, err.Error())
+		return fmt.Errorf("error when removing file %s:\n\t%s", path, err.Error())
 	}
 	return nil
 }
@@ -85,14 +85,14 @@ func removeFile(path string) error {
 func matchCSVHeader(path string, columns []string) (bool, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return false, fmt.Errorf("Error opening file %s:\n\t%s", path, err.Error())
+		return false, fmt.Errorf("error opening file %s:\n\t%s", path, err.Error())
 	}
 	defer file.Close()
 
 	reader := csv.NewReader(file)
 	header, err := reader.Read()
 	if err != nil {
-		return false, fmt.Errorf("Error when getting header of CSV file %s:\n\t%s", path, err.Error())
+		return false, fmt.Errorf("error when getting header of CSV file %s:\n\t%s", path, err.Error())
 	}
 
 	if len(header) != len(columns) {
@@ -111,14 +111,14 @@ func matchCSVHeader(path string, columns []string) (bool, error) {
 func newResultsFromCSV(path string) ([]*result, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("Error opening file %s:\n\t%s", path, err.Error())
+		return nil, fmt.Errorf("error opening file %s:\n\t%s", path, err.Error())
 	}
 	defer file.Close()
 
 	reader := csv.NewReader(file)
 	_, err = reader.Read()
 	if err != nil {
-		return nil, fmt.Errorf("Error when getting header of CSV file %s:\n\t%s", path, err.Error())
+		return nil, fmt.Errorf("error when getting header of CSV file %s:\n\t%s", path, err.Error())
 	}
 
 	results := []*result{}
@@ -128,11 +128,11 @@ func newResultsFromCSV(path string) ([]*result, error) {
 			if err.Error() == "EOF" {
 				break
 			}
-			return nil, fmt.Errorf("Error when reading a record of CSV file %s:\n\t%s", path, err.Error())
+			return nil, fmt.Errorf("error when reading a record of CSV file %s:\n\t%s", path, err.Error())
 		}
 		res, err := NewResultFromValues(record)
 		if err != nil {
-			return nil, fmt.Errorf("Error when parsing a record of CSV file %s as a result struct:\n\t%s", path, err.Error())
+			return nil, fmt.Errorf("error when parsing a record of CSV file %s as a result struct:\n\t%s", path, err.Error())
 		}
 		results = append(results, res)
 	}

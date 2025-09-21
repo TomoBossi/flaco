@@ -35,7 +35,7 @@ func main() {
 	if flags.History() != "" {
 		csvFile, err = os.OpenFile(flags.History(), os.O_APPEND|os.O_WRONLY, 0o644)
 		if err != nil {
-			fmt.Printf("Error when opening CSV file %s:\n\t%s", flags.History(), err.Error())
+			fmt.Printf("error when opening CSV file %s:\n\t%s", flags.History(), err.Error())
 			return
 		}
 		defer csvFile.Close()
@@ -96,7 +96,7 @@ func main() {
 			if flags.History() != "" {
 				_, err = csvFile.WriteString(fmt.Sprintf("%s\n", res.ResultValuesCSV()))
 				if err != nil {
-					fmt.Printf("Error when appending row to CSV file %s:\n\t%s", flags.History(), err.Error())
+					fmt.Printf("error when appending row to CSV file %s:\n\t%s", flags.History(), err.Error())
 					return
 				}
 			}

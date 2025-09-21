@@ -14,7 +14,7 @@ type summary struct {
 func NewSummary(bitrateResults []*result) (*summary, error) {
 	n := len(bitrateResults)
 	if n == 0 {
-		return nil, fmt.Errorf("Error: Cannot summarize an empty slice of results.")
+		return nil, fmt.Errorf("error: Cannot summarize an empty slice of results")
 	}
 
 	numSuccess := 0

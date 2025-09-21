@@ -51,7 +51,7 @@ func rightTailedBinomialTest(n, k int, p float64) float64 {
 func mean(slice []float64) (float64, error) {
 	n := len(slice)
 	if n == 0 {
-		return 0.0, fmt.Errorf("Error: Cannot find mean of empty slice.")
+		return 0.0, fmt.Errorf("error: Cannot find mean of empty slice")
 	}
 
 	sum := 0.0
@@ -64,7 +64,7 @@ func mean(slice []float64) (float64, error) {
 func median(slice []int) (float64, error) {
 	n := len(slice)
 	if n == 0 {
-		return 0.0, fmt.Errorf("Error: Cannot find median of empty slice.")
+		return 0.0, fmt.Errorf("error: Cannot find median of empty slice")
 	}
 
 	slices.Sort(slice)

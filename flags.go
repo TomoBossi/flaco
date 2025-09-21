@@ -38,43 +38,43 @@ func NewFlags() (*flags, error) {
 	flag.Parse()
 
 	if !*summary && *flac == "" {
-		return nil, fmt.Errorf("Error: FLAC file not provided.")
+		return nil, fmt.Errorf("error: FLAC file not provided")
 	}
 
 	if *summary && *history == "" {
-		return nil, fmt.Errorf("Error: Previous history CSV file not provided.")
+		return nil, fmt.Errorf("error: Previous history CSV file not provided")
 	}
 
 	if flacExists, err := exists(*flac); *flac != "" && !flacExists && !*summary {
-		return nil, fmt.Errorf("Error: FLAC file not found:\n\t%s", err.Error())
+		return nil, fmt.Errorf("error: FLAC file not found:\n\t%s", err.Error())
 	}
 
 	if *flac != "" && !*summary && filepath.Ext(*flac) != ".flac" {
-		return nil, fmt.Errorf("Error: FLAC file file must have a .flac extension.")
+		return nil, fmt.Errorf("error: FLAC file file must have a .flac extension")
 	}
 
 	if mp3Exists, err := exists(*mp3); *mp3 != "" && !mp3Exists && !*summary {
-		return nil, fmt.Errorf("Error: MP3 file not found:\n\t%s", err.Error())
+		return nil, fmt.Errorf("error: MP3 file not found:\n\t%s", err.Error())
 	}
 
 	if csvExists, _ := exists(*history); *history != "" && !csvExists {
 		if filepath.Ext(*history) != ".csv" {
-			return nil, fmt.Errorf("Error: Previous history file must have a .csv extension.")
+			return nil, fmt.Errorf("error: Previous history file must have a .csv extension")
 		}
 		file, err := os.Create(*history)
 		if err != nil {
-			return nil, fmt.Errorf("Error when creating CSV file %s:\n\t%s", *history, err.Error())
+			return nil, fmt.Errorf("error when creating CSV file %s:\n\t%s", *history, err.Error())
 		}
 		defer file.Close()
 		_, err = file.WriteString(fmt.Sprintf("%s\n", strings.Join(ResultFields(), ",")))
 		if err != nil {
-			return nil, fmt.Errorf("Error when appending header to CSV file %s:\n\t%s", *history, err.Error())
+			return nil, fmt.Errorf("error when appending header to CSV file %s:\n\t%s", *history, err.Error())
 		}
 	} else if *history != "" && csvExists {
 		if csvHeadersMatch, err := matchCSVHeader(*history, ResultFields()); err != nil {
 			return nil, err
 		} else if !csvHeadersMatch {
-			return nil, fmt.Errorf("Error: Previous history CSV file headers do not match the expected headers (%s).", strings.Join(ResultFields(), ", "))
+			return nil, fmt.Errorf("error: Previous history CSV file headers do not match the expected headers (%s)", strings.Join(ResultFields(), ", "))
 		}
 	}
 
