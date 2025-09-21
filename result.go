@@ -82,7 +82,7 @@ func NewResult(flac, mp3 string, bitrate int, timestamp string, volume int) (*re
 								mp3Bitrate:       bitrate,
 								success:          success,
 								numSwaps:         numSwaps,
-								elapsedTime:      time.Now().Sub(start).Seconds(),
+								elapsedTime:      time.Since(start).Seconds(),
 								timestamp:        timestamp,
 							}, nil
 						}
@@ -104,42 +104,42 @@ func NewResult(flac, mp3 string, bitrate int, timestamp string, volume int) (*re
 
 func NewResultFromValues(values []string) (*result, error) {
 	if len(values) != len(ResultFields()) {
-		return nil, fmt.Errorf("Error when creating new result from values: The number of values does not match the number of fields in the result struct.")
+		return nil, fmt.Errorf("error when creating new result from values: The number of values does not match the number of fields in the result struct")
 	}
 
 	unixTime, err := strconv.ParseInt(values[0], 10, 64)
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to int64 (unixTime):\n\t%s", values[0], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to int64 (unixTime):\n\t%s", values[0], err.Error())
 	}
 
 	flacSamplingRate, err := strconv.Atoi(values[3])
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to int (flacSamplingRate):\n\t%s", values[3], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to int (flacSamplingRate):\n\t%s", values[3], err.Error())
 	}
 
 	flacBitDepth, err := strconv.Atoi(values[4])
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to int (flacBitDepth):\n\t%s", values[4], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to int (flacBitDepth):\n\t%s", values[4], err.Error())
 	}
 
 	mp3Bitrate, err := strconv.Atoi(values[5])
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to int (mp3Bitrate):\n\t%s", values[5], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to int (mp3Bitrate):\n\t%s", values[5], err.Error())
 	}
 
 	success, err := strconv.ParseBool(values[6])
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to bool (success):\n\t%s", values[7], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to bool (success):\n\t%s", values[7], err.Error())
 	}
 
 	numSwaps, err := strconv.Atoi(values[7])
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to int (numSwaps):\n\t%s", values[7], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to int (numSwaps):\n\t%s", values[7], err.Error())
 	}
 
 	elapsedTime, err := strconv.ParseFloat(values[8], 64)
 	if err != nil {
-		return nil, fmt.Errorf("Error when converting string %s to float64 (elapsedTime):\n\t%s", values[8], err.Error())
+		return nil, fmt.Errorf("error when converting string %s to float64 (elapsedTime):\n\t%s", values[8], err.Error())
 	}
 
 	return &result{
