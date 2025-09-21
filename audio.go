@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"syscall"
 )
 
 func getFlacInfo(flac string) (int, int, error) {
@@ -13,7 +14,7 @@ func getFlacInfo(flac string) (int, int, error) {
 	cmd.Stderr = &out
 	err := cmd.Run()
 	if err != nil {
-		return 0, 0, fmt.Errorf("Error when getting info of FLAC file %s:\n\t%s", flac, err.Error())
+		return 0, 0, fmt.Errorf("error when getting info of FLAC file %s:\n\t%s", flac, err.Error())
 	}
 	info := out.String()
 
@@ -22,7 +23,7 @@ func getFlacInfo(flac string) (int, int, error) {
 	if len(matches) > 1 {
 		_, err = fmt.Sscanf(matches[1], "%d", &samplingRate)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Error when parsing sampling rate info of FLAC file %s:\n\t%s", flac, err.Error())
+			return 0, 0, fmt.Errorf("error when parsing sampling rate info of FLAC file %s:\n\t%s", flac, err.Error())
 		}
 	}
 
@@ -31,7 +32,7 @@ func getFlacInfo(flac string) (int, int, error) {
 	if len(matches) > 1 {
 		_, err = fmt.Sscanf(matches[1], "%d", &bitDepth)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Error when parsing bit depth info of FLAC file %s:\n\t%s", flac, err.Error())
+			return 0, 0, fmt.Errorf("error when parsing bit depth info of FLAC file %s:\n\t%s", flac, err.Error())
 		}
 	}
 
@@ -40,16 +41,22 @@ func getFlacInfo(flac string) (int, int, error) {
 
 func playAudio(path string, timestamp string, volume int) (*exec.Cmd, error) {
 	cmd := exec.Command("mpv", fmt.Sprintf("--start=%s", timestamp), fmt.Sprintf("--volume=%d", volume), path)
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	if err := cmd.Start(); err != nil {
-		return nil, fmt.Errorf("Error when playing audio file %s:\n\t%s", path, err.Error())
+		return nil, fmt.Errorf("error when playing audio file %s:\n\t%s", path, err.Error())
 	}
 	return cmd, nil
 }
 
 func stopAudio(process *exec.Cmd) error {
-	err := process.Process.Kill()
-	if err != nil {
-		return fmt.Errorf("Error when stopping audio:\n\t%s", err.Error())
+	if process.ProcessState != nil && process.ProcessState.Exited() {
+		return nil
+	}
+	if err := syscall.Kill(-process.Process.Pid, syscall.SIGKILL); err != nil {
+		return fmt.Errorf("error when stopping audio:\n\t%s", err.Error())
+	}
+	if _, err := process.Process.Wait(); err != nil {
+		return fmt.Errorf("error when waiting for stopped audio:\n\t%s", err.Error())
 	}
 	return nil
 }
